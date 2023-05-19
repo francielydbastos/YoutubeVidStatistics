@@ -1,6 +1,8 @@
 package com.challenge.youtubeviews.service;
 
 import com.challenge.youtubeviews.client.YoutubeClient;
+import com.challenge.youtubeviews.exception.VideoAlreadySavedInDbException;
+import com.challenge.youtubeviews.exception.VideoNotFoundException;
 import com.challenge.youtubeviews.model.Video;
 import com.challenge.youtubeviews.repository.VideoRepository;
 import com.challenge.youtubeviews.response.SnippetResponse;
@@ -23,22 +25,23 @@ public class VideoService {
         return youtubeClient.getVideo("snippet", id, API_KEY);
     }
     public Video saveVideo(String youtubeVideoId) {
-        VideoResponse videoDetails = getVideoDetails(youtubeVideoId);
-        SnippetResponse snippet = videoDetails.getItems().get(0) != null ? videoDetails.getItems().get(0).getSnippet() : null;
-
-        if (snippet == null) {
-            throw new RuntimeException("No video found with the provided ID.");
+        if (videoRepository.findByYoutubeUrlId(youtubeVideoId).isPresent()) {
+            throw new VideoAlreadySavedInDbException();
         }
 
-        Video video = Video.builder()
-                .videoTitle(snippet.getTitle())
-                .chanelTitle(snippet.getChannelTitle())
-                .uploadDate(snippet.getPublishedAt())
-                .youtubeUrlId(youtubeVideoId)
-                .build();
+        VideoResponse videoDetails = getVideoDetails(youtubeVideoId);
+        SnippetResponse snippet = videoDetails.getItems().size() != 0 ? videoDetails.getItems().get(0).getSnippet() : null;
+
+        if (snippet == null) {
+            throw new VideoNotFoundException();
+        }
+
+        Video video = new Video();
+        video.setVideoTitle(snippet.getTitle());
+        video.setChanelTitle(snippet.getChannelTitle());
+        video.setUploadDate(snippet.getPublishedAt());
+        video.setYoutubeUrlId(youtubeVideoId);
 
         return videoRepository.save(video);
     }
-
-    
 }
