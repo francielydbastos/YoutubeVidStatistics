@@ -1,4 +1,4 @@
-package com.challenge.youtubeviews.response;
+package com.challenge.youtubeviews.response.video;
 
 import lombok.Data;
 

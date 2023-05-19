@@ -1,4 +1,4 @@
-package com.challenge.youtubeviews.response;
+package com.challenge.youtubeviews.response.videostatistics;
 
 import lombok.Data;
 
@@ -7,5 +7,5 @@ public class ItensResponse {
     private String kind;
     private String etag;
     private String id;
-    private SnippetResponse snippet;
+    private StatisticsResponse statistics;
 }

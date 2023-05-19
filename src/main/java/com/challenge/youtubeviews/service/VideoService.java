@@ -5,8 +5,8 @@ import com.challenge.youtubeviews.exception.VideoAlreadySavedInDbException;
 import com.challenge.youtubeviews.exception.VideoNotFoundException;
 import com.challenge.youtubeviews.model.Video;
 import com.challenge.youtubeviews.repository.VideoRepository;
-import com.challenge.youtubeviews.response.SnippetResponse;
-import com.challenge.youtubeviews.response.VideoResponse;
+import com.challenge.youtubeviews.response.video.SnippetResponse;
+import com.challenge.youtubeviews.response.video.VideoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class VideoService {
     @Autowired
     private VideoRepository videoRepository;
 
-    public VideoResponse getVideoDetails(String id) {
+    private VideoResponse getVideoDetails(String id) {
         return youtubeClient.getVideo("snippet", id, API_KEY);
     }
     public Video saveVideo(String youtubeVideoId) {
