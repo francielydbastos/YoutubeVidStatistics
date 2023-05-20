@@ -14,9 +14,6 @@ public interface YoutubeClient {
     @GetMapping
     VideoResponse getVideo(@RequestParam("part") String part, @RequestParam("id") String id, @RequestParam("key") String key);
 
-//    @GetMapping
-//    VideoStatisticsResponse getVideoStatistics(@RequestParam("part") String part, @RequestParam("id") String id, @RequestParam("key") String key);
-
     @GetMapping
     VideoStatisticsResponse getVideoStatistics(@RequestParam("part") String part, @RequestParam("id") List<String> id, @RequestParam("key") String key);
 
