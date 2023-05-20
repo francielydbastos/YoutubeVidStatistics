@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +29,10 @@ public class VideoStatisticsService {
     private VideoStatisticsResponse getVideoDetails(String youtubeVideoId) {
         return youtubeClient.getVideoStatistics("statistics", youtubeVideoId, API_KEY);
     }
+
+//    private VideoStatisticsResponse getVideoDetails(List<String> youtubeVideoIds) {
+//        return youtubeClient.getVideoStatistics("statistics", youtubeVideoIds, API_KEY);
+//    }
     public void updateViews() {
         List<Video> videos = videoRepository.findAll();
 
@@ -53,11 +58,13 @@ public class VideoStatisticsService {
 //
 //        videoStatisticsResponse.getItems().stream().forEach((item) -> {
 //            VideoStatistics videoStatistics = new VideoStatistics();
-//            videoStatistics.setVideoId(?);
-//            videoStatistics.setViewCount(item.getStatistics.getViewCount());
-//            videoStatistics.setCommentCount(item.getStatistics.getCommentCount());
-//            videoStatistics.setLikeCount(item.getStatistics.getLikeCount());
-//            videoStatistics.setLikeCount(Instant.now();
+//            videoStatistics.setVideoId(videoRepository.findByYoutubeUrlId(item.getId()).get());
+//            videoStatistics.setViewCount(item.getStatistics().getViewCount());
+//            videoStatistics.setCommentCount(item.getStatistics().getCommentCount());
+//            videoStatistics.setLikeCount(item.getStatistics().getLikeCount());
+//            videoStatistics.setUpdateDate(Instant.now());
+//
+//            videoStatisticsList.add(videoStatistics);
 //        });
 //
 //        videoStatisticsRepository.saveAll(videoStatisticsList);
