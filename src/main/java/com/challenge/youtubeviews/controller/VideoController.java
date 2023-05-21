@@ -3,6 +3,7 @@ package com.challenge.youtubeviews.controller;
 import com.challenge.youtubeviews.model.Video;
 import com.challenge.youtubeviews.response.VideoInfoResponse;
 import com.challenge.youtubeviews.service.VideoService;
+import com.challenge.youtubeviews.service.VideoStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,14 @@ import java.util.List;
 public class VideoController {
     @Autowired
     private VideoService videoService;
+    @Autowired
+    private VideoStatisticsService videoStatisticsService;
 
     @PostMapping("/{id}")
     public ResponseEntity<Video> saveVideoToMonitor(@PathVariable(value="id") String id) {
         Video video = videoService.saveVideo(id);
+        videoStatisticsService.addStatsToNewVideo(video);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(video);
     }
 

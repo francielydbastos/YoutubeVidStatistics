@@ -17,7 +17,7 @@ public class VideoStatisticsController {
 
     @GetMapping("/updateStatistics")
     public void updateStatistics() {
-        videoStatisticsService.updateViews();
+        videoStatisticsService.updateStatistics();
     }
 
     @GetMapping("/{id}/all")

@@ -13,6 +13,6 @@ public class Scheduler {
 
     @Scheduled(fixedRate = 300000)
     public void updateStatistics() {
-        videoStatisticsService.updateViews();
+        videoStatisticsService.updateStatistics();
     }
 }

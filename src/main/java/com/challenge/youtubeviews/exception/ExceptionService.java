@@ -23,11 +23,4 @@ public class ExceptionService {
         return new ResponseEntity(uer, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NoStatisticsFoundInDbException.class)
-    ResponseEntity<NoStatisticsFoundInDbException> handleException(NoStatisticsFoundInDbException err){
-        UserErrorResponse uer = new UserErrorResponse();
-        uer.setStatus(HttpStatus.NOT_FOUND.value());
-        uer.setMessage("No statistics info was found in our database for the requested video.");
-        return new ResponseEntity(uer, HttpStatus.NOT_FOUND);
-    }
 }

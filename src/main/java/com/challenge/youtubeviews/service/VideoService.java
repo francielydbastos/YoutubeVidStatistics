@@ -1,7 +1,6 @@
 package com.challenge.youtubeviews.service;
 
 import com.challenge.youtubeviews.client.YoutubeClient;
-import com.challenge.youtubeviews.exception.NoStatisticsFoundInDbException;
 import com.challenge.youtubeviews.exception.VideoAlreadySavedInDbException;
 import com.challenge.youtubeviews.exception.VideoNotFoundException;
 import com.challenge.youtubeviews.model.Video;
@@ -68,10 +67,6 @@ public class VideoService {
         Video video = optionalVideo.get();
 
         Optional<VideoStatistics> optionalLastVideoStatistics = videoStatisticsRepository.findFirstByVideoIdOrderByVideoStatisticsIdDesc(video);
-
-        if (optionalLastVideoStatistics.isEmpty()) {
-            throw new NoStatisticsFoundInDbException();
-        }
 
         VideoStatistics lastVideoStatistics = optionalLastVideoStatistics.get();
 

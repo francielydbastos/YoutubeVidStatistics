@@ -32,18 +32,33 @@ public class VideoStatisticsService {
     private VideoStatisticsResponse getVideoDetails(List<String> youtubeVideoIds) {
         return youtubeClient.getVideoStatistics("statistics", youtubeVideoIds, API_KEY);
     }
-    public void updateViews() {
+
+    public void addStatsToNewVideo(Video video) {
+        VideoStatisticsResponse videoStatisticsResponse = getVideoDetails(List.of(video.getYoutubeUrlId()));
+        List<ItensResponse> itemStatistics = videoStatisticsResponse.getItems();
+
+        VideoStatistics videoStatistics = new VideoStatistics();
+        videoStatistics.setVideoId(video);
+        videoStatistics.setViewCount(itemStatistics.get(0).getStatistics().getViewCount());
+        videoStatistics.setCommentCount(itemStatistics.get(0).getStatistics().getCommentCount());
+        videoStatistics.setLikeCount(itemStatistics.get(0).getStatistics().getLikeCount());
+        videoStatistics.setUpdateDate(Instant.now());
+
+        videoStatisticsRepository.save(videoStatistics);
+    }
+
+    public void updateStatistics() {
         List<Video> videos = videoRepository.findAll();
         List<String> youtubeVideoIds = videos.stream().map(Video::getYoutubeUrlId).toList();
         VideoStatisticsResponse videoStatisticsResponse = getVideoDetails(youtubeVideoIds);
 
         List<VideoStatistics> videoStatisticsList = new ArrayList<>();
 
-        List<ItensResponse> itensStatistic = videoStatisticsResponse.getItems();
+        List<ItensResponse> itensStatistics = videoStatisticsResponse.getItems();
 
-        itensStatistic.forEach((item) -> {
+        itensStatistics.forEach((item) -> {
             VideoStatistics videoStatistics = new VideoStatistics();
-            videoStatistics.setVideoId(videos.get(itensStatistic.indexOf(item)));
+            videoStatistics.setVideoId(videos.get(itensStatistics.indexOf(item)));
             videoStatistics.setViewCount(item.getStatistics().getViewCount());
             videoStatistics.setCommentCount(item.getStatistics().getCommentCount());
             videoStatistics.setLikeCount(item.getStatistics().getLikeCount());
@@ -63,9 +78,8 @@ public class VideoStatisticsService {
         }
 
        List<VideoStatistics> allVideoStats = videoStatisticsRepository.findAllByVideoIdOrderByVideoStatisticsIdDesc(optionalVideo.get());
-       List<StatsInfoResponse> allStatsInfo = allVideoStats.stream().map(video -> new StatsInfoResponse(video.getUpdateDate(), video.getViewCount(), video.getLikeCount(), video.getCommentCount())).toList();
 
-       return allStatsInfo;
+       return allVideoStats.stream().map(video -> new StatsInfoResponse(video.getUpdateDate(), video.getViewCount(), video.getLikeCount(), video.getCommentCount())).toList();
     }
 
     public List<StatsInfoResponse> getTop20StatsForAVideo(String youtubeVideoId) {
@@ -76,9 +90,8 @@ public class VideoStatisticsService {
         }
 
         List<VideoStatistics> top20VideoStats = videoStatisticsRepository.findTop20ByVideoIdOrderByVideoStatisticsIdDesc(optionalVideo.get());
-        List<StatsInfoResponse> top20StatsInfo = top20VideoStats.stream().map(video -> new StatsInfoResponse(video.getUpdateDate(), video.getViewCount(), video.getLikeCount(), video.getCommentCount())).toList();
 
-        return top20StatsInfo;
+        return top20VideoStats.stream().map(video -> new StatsInfoResponse(video.getUpdateDate(), video.getViewCount(), video.getLikeCount(), video.getCommentCount())).toList();
     }
 
 }
