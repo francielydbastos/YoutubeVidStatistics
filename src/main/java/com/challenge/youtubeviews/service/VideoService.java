@@ -30,19 +30,22 @@ public class VideoService {
     private VideoStatisticsRepository videoStatisticsRepository;
 
     private VideoResponse getVideoDetails(String id) {
-        return youtubeClient.getVideo("snippet", id, API_KEY);
+        VideoResponse videoResponse = youtubeClient.getVideo("snippet", id, API_KEY);
+
+        if(videoResponse.getItems().size() == 0) {
+            throw new VideoNotFoundException();
+        }
+
+        return videoResponse;
     }
+
     public Video saveVideo(String youtubeVideoId) {
         if (videoRepository.findByYoutubeUrlId(youtubeVideoId).isPresent()) {
             throw new VideoAlreadySavedInDbException();
         }
 
         VideoResponse videoDetails = getVideoDetails(youtubeVideoId);
-        SnippetResponse snippet = videoDetails.getItems().size() != 0 ? videoDetails.getItems().get(0).getSnippet() : null;
-
-        if (snippet == null) {
-            throw new VideoNotFoundException();
-        }
+        SnippetResponse snippet = videoDetails.getItems().get(0).getSnippet();
 
         Video video = new Video();
         video.setVideoTitle(snippet.getTitle());
@@ -50,11 +53,14 @@ public class VideoService {
         video.setUploadDate(snippet.getPublishedAt());
         video.setYoutubeUrlId(youtubeVideoId);
 
-        return videoRepository.save(video);
+        videoRepository.save(video);
+
+        return video;
     }
 
     public List<Video> getAllVideosMonitored() {
-        return videoRepository.findAll();
+        List<Video> videos = videoRepository.findAll();
+        return videos;
     }
 
     public VideoInfoResponse getMonitoredVideoLastStatsById(String youtubeVideoId) {
