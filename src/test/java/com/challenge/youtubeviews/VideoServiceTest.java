@@ -103,7 +103,6 @@ public class VideoServiceTest {
 
         assertEquals(videoInfoResponse.getVideoTitle(), videoInfoResponseReturned.getVideoTitle());
         assertEquals(videoInfoResponse.getViewCount(), videoInfoResponseReturned.getViewCount());
-
     }
 
 }
